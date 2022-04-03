@@ -1,5 +1,5 @@
 
-import javax.swing.*;
+/*import javax.swing.*;
 
 import java.awt.*;
 
@@ -33,3 +33,4 @@ public class CardTable extends JFrame {
 //icons into label -> labels onto a panel -> panels are on the frame
 //access cardtable (to update Jpanels, possibly once) class from the main
 //use myCardTable.pnlComputerHand
+*/
