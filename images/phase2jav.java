@@ -140,31 +140,38 @@ public class phase2jav
    // a simple main to throw all the JLabels out there for the world to see
    public static void main(String[] args)
    {
-      int k;
+      static int NUM_CARDS_PER_HAND = 7;
+      static int  NUM_PLAYERS = 2;
+      static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+      static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+      static JLabel[] playedCardLabels  = new JLabel[NUM_PLAYERS];
+      static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS];
 
-      // prepare the image icon array
-      loadCardIcons();
+      public static void main(String[] args)
+      {
+         int k;
+         Icon tempIcon;
 
-      // establish main frame in which program will run
-      JFrame frmMyWindow = new JFrame("Card Room");
-      frmMyWindow.setSize(1150, 650);
-      frmMyWindow.setLocationRelativeTo(null);
-      frmMyWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         // establish main frame in which program will run
+         CardTable myCardTable
+            = new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
+         myCardTable.setSize(800, 600);
+         myCardTable.setLocationRelativeTo(null);
+         myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-      // set up layout which will control placement of buttons, etc.
-      FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20);
-      frmMyWindow.setLayout(layout);
+         // show everything to the user
+         myCardTable.setVisible(true);
 
-      // prepare the image label array
-      JLabel[] labels = new JLabel[NUM_CARD_IMAGES];
-      for (k = 0; k < NUM_CARD_IMAGES; k++)
-         labels[k] = new JLabel(icon[k]);
+         // CREATE LABELS ----------------------------------------------------
+         code goes here ...
 
-      // place your 3 controls into frame
-      for (k = 0; k < NUM_CARD_IMAGES; k++)
-         frmMyWindow.add(labels[k]);
+         // ADD LABELS TO PANELS -----------------------------------------
+         code goes here ...
 
-      // show everything to the user
-      frmMyWindow.setVisible(true);
-   }
+         // and two random cards in the play region (simulating a computer/hum ply)
+         code goes here ...
+
+         // show everything to the user
+         myCardTable.setVisible(true);
+      }
 }
