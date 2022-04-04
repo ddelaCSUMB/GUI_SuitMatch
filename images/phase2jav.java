@@ -151,7 +151,7 @@ public class phase2jav
       //private static final int MAX_RANK = 13;
 
       public static char[] valuRanks = new char[] {'2', '3', '4', '5', '6',
-         '7', '8', '9', 'T', 'J', 'Q', 'K', 'A', 'X' }; /*- put the order of
+         '7', '8', '9', 'T', 'J', 'Q', 'K', 'A', 'X'}; /*- put the order of
          the card values in here with the smallest first, include 'X' for a
          joker*/
       private char value;
@@ -391,21 +391,8 @@ public class phase2jav
 
    class Deck /*Adjust for the joker by adding 4 spots in the Card[] array.
    Add methods for adding and removing cards from the deck as well as a sort
-   method. (these will be using in the CardGameOutline given in Phase 3)
+   method. (these will be using in the CardGameOutline given in Phase 3)*/
 
-   boolean addCard(Card card) - make sure that there are not too many instances
-   of the card in the deck if you add it.  Return false if there will be too
-   many.  It should put the card on the top of the deck.
-
-   bollean removeCard(Card card) - you are looking to remove a specific card
-   from the deck.  Put the current top card into its place.  Be sure the card
-   you need is actually still in the deck, if not return false.
-
-   void sort() - put all of the cards in the deck back into the right order
-   according to their values.  Is there another method somewhere that already
-   does this that you could refer to?
-
-   int getNumCards() - return the number of cards remaining in the deck.*/
    {
       public static final int MAX_CARDS = 312;
       private static Card[] masterPack = new Card[52];
@@ -447,14 +434,13 @@ public class phase2jav
             Card temp = cards[i];
             cards[j] = cards[i];
             cards[i] = temp;
-            //Card[] newCards = new Card[i];
+
          }
 
       }
 
       public Card dealCard()
       {
-         //int index = cards.length;
 
          if (topCard == 0)
          {
@@ -530,6 +516,37 @@ public class phase2jav
          }
          //loop for char value & loop for Suit suit
       }
+
+         boolean addCard(Card card) /*- make sure that there are not
+         too many
+         instances of the card in the deck if you add it.  Return false if
+         there will be too many.  It should put the card on the top of the deck
+         .*/
+         {
+
+         }
+
+         boolean removeCard(Card card) /*- you are looking to remove a specific
+         card from the deck.  Put the current top card into its place.  Be sure
+         the card you need is actually still in the deck, if not return false.*/
+         {
+
+         }
+
+         public void sort() /* - put all of the cards in the deck back into the
+         right order according to their values.  Is there another method
+         somewhere that already does this that you could refer to?*/
+         {
+
+         }
+
+         public int getNumCards() //return the number of cards remaining in the
+         // deck
+         {
+
+         }
+
+
       //end of deck class
    }
 
