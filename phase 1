@@ -26,6 +26,7 @@ public class Assig5
             + turnIntIntoCardSuit(s) + ".gif");
          }
       }
+      icon[index++] = new ImageIcon("images/BK.gif");
    }
    
    // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
