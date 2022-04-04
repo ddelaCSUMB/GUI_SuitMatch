@@ -6,70 +6,15 @@ import java.util.Random;
 
 public class phase2jav
 {
-   // static for the 57 icons and their corresponding labels
-   // normally we would not have a separate label for each card, but
-   // if we want to display all at once using labels, we need to.
+   static int NUM_CARDS_PER_HAND = 7;
+   static int NUM_PLAYERS = 2;
+   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+   static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
+   static JLabel[] playLabelText = new JLabel[NUM_PLAYERS];
 
-   static final int NUM_CARD_IMAGES = 57;
-      // 52 + 4 jokers + 1 back-of-card image
-   static Icon[] icon = new ImageIcon[NUM_CARD_IMAGES];
-
-   static void loadCardIcons()
-   {
-      // build the file names ("AC.gif", "2C.gif", "3C.gif", "TC.gif", etc.)
-      // in a SHORT loop.  For each file name, read it in and use it to
-      // instantiate each of the 57 Icons in the icon[] array.
-
-      int index = 0;
-
-      for (int s = 0; s < 4; s++)
-      {
-         for (int r = 0; r < 14; r++)
-         {
-            icon[index++] = new ImageIcon(
-               "images/" + turnIntIntoCardValue(r) + turnIntIntoCardSuit(s) +
-                  ".gif");
-         }
-      }
-   }
-
-   // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
-   static String turnIntIntoCardValue(int k)
-   {
-      // an idea for a helper method (do it differently if you wish)
-      String cardRank = null;
-      String[] rankValues =
-         { "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K",
-            "X" };
-      if (k >= 0 && k < 14)
-      {
-         cardRank = rankValues[k];
-      }
-      else
-      {
-         return rankValues[0];
-      }
-      return cardRank;
-   }
-
-   // turns 0 - 3 into "C", "D", "H", "S"
-   static String turnIntIntoCardSuit(int j)
-   {
-      // an idea for another helper method (do it differently if you wish)
-      String cardSuit = null;
-      String[] suitValues = { "C", "D", "H", "S" };
-      if (j >= 0 && j < 4)
-      {
-         cardSuit = suitValues[j];
-      }
-      else
-      {
-         return suitValues[0];
-      }
-      return cardSuit;
-   }
-
-   public class CardTable extends JFrame
+   //BEGIN CardTable Class
+   class CardTable extends JFrame
    {
       static int MAX_CARDS_PER_HAND = 56;
       static int MAX_PLAYERS = 2;  // for now, we only allow 2 person games
@@ -106,12 +51,54 @@ public class phase2jav
          return numPlayers;
       }
    }
+   //END CardTable Class
 
-   public class GUICard
-   {  // 14 = A thru K + joker
+   //START GUICard Class
+   class GUICard
+   {
+      // 14 = A thru K + joker
       private static Icon[][] iconCards = new ImageIcon[14][4];
       private static Icon iconBack;
       static boolean iconsLoaded = false;
+      static final int NUM_CARD_IMAGES = 57;
+      // 52 + 4 jokers + 1 back-of-card image
+      static Icon[] icon = new ImageIcon[NUM_CARD_IMAGES];
+
+      // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
+      static String turnIntIntoCardValue(int k)
+      {
+         // an idea for a helper method (do it differently if you wish)
+         String cardRank = null;
+         String[] rankValues =
+            { "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K",
+               "X" };
+         if (k >= 0 && k < 14)
+         {
+            cardRank = rankValues[k];
+         }
+         else
+         {
+            return rankValues[0];
+         }
+         return cardRank;
+      }
+
+      // turns 0 - 3 into "C", "D", "H", "S"
+      static String turnIntIntoCardSuit(int j)
+      {
+         // an idea for another helper method (do it differently if you wish)
+         String cardSuit = null;
+         String[] suitValues = { "C", "D", "H", "S" };
+         if (j >= 0 && j < 4)
+         {
+            cardSuit = suitValues[j];
+         }
+         else
+         {
+            return suitValues[0];
+         }
+         return cardSuit;
+      }
 
       static void loadCardIcon() /*the code for this was fundamentally done in
       Phase 1.  The difference here is that we are storing the Icons in a 2-D
@@ -120,8 +107,23 @@ public class phase2jav
       the icons after it has already loaded them once.  Hint:  Call this method
       any time you might need an Icon, but make sure that it loads the entire
       array the first time it is called, and does nothing any later time.*/
-      {
 
+      //From phase 1:
+      // build the file names ("AC.gif", "2C.gif", "3C.gif", "TC.gif", etc.)
+      // in a SHORT loop.  For each file name, read it in and use it to
+      // instantiate each of the 57 Icons in the icon[] array.
+      {
+         int index = 0;
+
+         for (int s = 0; s < 4; s++)
+         {
+            for (int r = 0; r < 14; r++)
+            {
+               icon[index++] = new ImageIcon(
+                  "images/" + turnIntIntoCardValue(r) + turnIntIntoCardSuit(s) +
+                     ".gif");
+            }
+         }
       }
 
       public static Icon getIcon(Card card) /*This method takes a Card object
@@ -150,8 +152,9 @@ public class phase2jav
       //private static final int MIN_RANK = 1;
       //private static final int MAX_RANK = 13;
 
-      public static char[] valuRanks = new char[] {'2', '3', '4', '5', '6',
-         '7', '8', '9', 'T', 'J', 'Q', 'K', 'A', 'X'}; /*- put the order of
+      public static char[] valuRanks =
+         new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q',
+            'K', 'A', 'X' }; /*- put the order of
          the card values in here with the smallest first, include 'X' for a
          joker*/
       private char value;
@@ -225,10 +228,9 @@ public class phase2jav
       {
          if ((value == '2') || (value == '3') || (value == '4') ||
                 (value == '5') || (value == '6') || (value == '7') ||
-                (value == '8') ||
-                (value == '9') || (value == 'T') || (value == 'J') ||
-                (value == 'Q') ||
-                (value == 'K') || (value == 'A'))
+                (value == '8') || (value == '9') || (value == 'T') ||
+                (value == 'J') || (value == 'Q') || (value == 'K') ||
+                (value == 'A'))
          {
             return true;
          }
@@ -245,6 +247,8 @@ public class phase2jav
 
       }
    }
+
+   //END of Card Class
 
    //Start of Hand class
    class Hand extends Card/*
@@ -334,7 +338,6 @@ public class phase2jav
          return myCards;
       }
 
-
       //getter for numCards
       public int getNumCards()
       {
@@ -345,24 +348,24 @@ public class phase2jav
 
       public Card inspectCard(int k)
       {
-         Card invalidCard = new Card ('H', Card.Suit.CLUBS);
-         if(k > 312 || k < 0)
+         Card invalidCard = new Card('H', Card.Suit.CLUBS);
+         if (k > 312 || k < 0)
          {
             System.out.println("**illegal**");
             return invalidCard;
          }
-         if(myCards[k] == null)
+         if (myCards[k] == null)
             return invalidCard;
-         if(myCards[k].getCardError())
+         if (myCards[k].getCardError())
             return invalidCard;
          else
-            invalidCard.set('3',Card.Suit.HEARTS);
+            invalidCard.set('3', Card.Suit.HEARTS);
          return invalidCard;
       }
 
       public Card playCard(int cardIndex)
       {
-         if ( numCards == 0 ) //error
+         if (numCards == 0) //error
          {
             //Creates a card that does not work
             return new Card('M', Card.Suit.spades);
@@ -371,9 +374,9 @@ public class phase2jav
          Card card = myCards[cardIndex];
 
          numCards--;
-         for(int i = cardIndex; i < numCards; i++)
+         for (int i = cardIndex; i < numCards; i++)
          {
-            myCards[i] = myCards[i+1];
+            myCards[i] = myCards[i + 1];
          }
 
          myCards[numCards] = null;
@@ -387,8 +390,9 @@ public class phase2jav
       }
 
    }
+   //END of Hand Class
 
-
+   //START of Deck Class
    class Deck /*Adjust for the joker by adding 4 spots in the Card[] array.
    Add methods for adding and removing cards from the deck as well as a sort
    method. (these will be using in the CardGameOutline given in Phase 3)*/
@@ -517,54 +521,48 @@ public class phase2jav
          //loop for char value & loop for Suit suit
       }
 
-         boolean addCard(Card card) /*- make sure that there are not
+      boolean addCard(Card card) /*- make sure that there are not
          too many
          instances of the card in the deck if you add it.  Return false if
          there will be too many.  It should put the card on the top of the deck
          .*/
-         {
+      {
 
-         }
+      }
 
-         boolean removeCard(Card card) /*- you are looking to remove a specific
+      boolean removeCard(Card card) /*- you are looking to remove a specific
          card from the deck.  Put the current top card into its place.  Be sure
          the card you need is actually still in the deck, if not return false.*/
-         {
+      {
 
-         }
+      }
 
-         public void sort() /* - put all of the cards in the deck back into the
+      public void sort() /* - put all of the cards in the deck back into the
          right order according to their values.  Is there another method
          somewhere that already does this that you could refer to?*/
-         {
+      {
 
-         }
+      }
 
-         public int getNumCards() //return the number of cards remaining in the
-         // deck
-         {
+      public int getNumCards() //return the number of cards remaining in the
+      // deck
+      {
 
-         }
+      }
 
-
-      //end of deck class
    }
+   //END of Deck Class
 
    // a simple main to throw all the JLabels out there for the world to see
    public static void main(String[] args)
    {
-      static int NUM_CARDS_PER_HAND = 7;
-      static int NUM_PLAYERS = 2;
-      static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
-      static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
-      static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
-      static JLabel[] playLabelText = new JLabel[NUM_PLAYERS];
 
       int k;
       Icon tempIcon;
 
       // establish main frame in which program will run
-      CardTable myCardTable = new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
+      CardTable myCardTable =
+         new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
       myCardTable.setSize(800, 600);
       myCardTable.setLocationRelativeTo(null);
       myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -584,6 +582,7 @@ public class phase2jav
       // show everything to the user
       myCardTable.setVisible(true);
    }
+
 }
 
 
