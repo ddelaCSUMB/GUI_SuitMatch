@@ -321,6 +321,11 @@ public class phase2jav
          {
             return emptyCard;
          }
+         
+         if(myCards[index] == null)
+         {
+            playCard(index);
+         }
 
          holdCard = myCards[index];
          numCards--;
