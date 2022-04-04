@@ -38,6 +38,20 @@ public class phase2jav
       client chose a joker for the two central cards, just so we
       would have something to see in the playing region.*/
       {
+         setLayout(new GridLayout(3, 1));
+         add(pnlComputerHand, BorderLayout.NORTH);
+         add(pnlHumanHand, BorderLayout.SOUTH);
+         add(pnlPlayArea, BorderLayout.CENTER);
+         /*
+         pnlComputerHand.setLayout(new BorderLayout());
+         pnlComputerHand.add(BorderLayout.NORTH);
+         pnlHumanHand.setLayout(new BorderLayout());
+         pnlHumanHand.add(new Button(title), BorderLayout.SOUTH);
+         pnlPlayArea.setLayout(new BorderLayout());
+         pnlPlayArea.add(new Button(title), BorderLayout.CENTER);*/
+
+
+
 
       }
 
@@ -149,14 +163,11 @@ public class phase2jav
          SPADES, HEARTS, DIAMONDS, CLUBS;
       }
 
-      //private static final int MIN_RANK = 1;
-      //private static final int MAX_RANK = 13;
 
-      public static char[] valuRanks =
-         new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q',
-            'K', 'A', 'X' }; /*- put the order of
-         the card values in here with the smallest first, include 'X' for a
-         joker*/
+      /*- put the order of the card values in here with the smallest first,
+      include 'X' for a joker*/
+      public static char[] valuRanks = new char[] { '2', '3', '4', '5', '6',
+         '7', '8', '9', 'T', 'J', 'Q', 'K', 'A', 'X' };
       private char value;
       private Suit suit;
       private boolean cardError;
@@ -480,7 +491,7 @@ public class phase2jav
          }
       }
 
-      private static void allocateMasterPack()
+      private void allocateMasterPack()
       {
          //some variables used in method
          //boolean cutRibbon = true;
