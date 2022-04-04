@@ -394,7 +394,7 @@ public class phase2jav
 
       public void sort() //calls the new arraySort() in the Card class.
       {
-
+         Card.arraySort(myCards, numCards);
       }
 
    }
