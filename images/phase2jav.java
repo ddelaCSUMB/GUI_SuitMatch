@@ -16,7 +16,7 @@ public class phase2jav
    //BEGIN CardTable Class
    class CardTable extends JFrame
    {
-      static int MAX_CARDS_PER_HAND = 56;
+      static int MAX_CARDS_PER_HAND = 57;
       static int MAX_PLAYERS = 2;  // for now, we only allow 2 person games
 
       private int numCardsPerHand;
@@ -299,7 +299,6 @@ public class phase2jav
       {
          if (numCards >= MAX_CARDS)
          {
-            System.out.println("Error: Adding to a full array.");
             return false;
          }
          else
@@ -320,8 +319,6 @@ public class phase2jav
          int index = getNumCards() - 1;
          if (numCards == 0)
          {
-            System.out.println("no more cards");
-            System.out.println("returning default card:");
             return emptyCard;
          }
 
