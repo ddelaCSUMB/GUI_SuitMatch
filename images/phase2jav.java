@@ -535,20 +535,59 @@ public class phase2jav
       }
 
       boolean addCard(Card card) /*- make sure that there are not
-         too many
-         instances of the card in the deck if you add it.  Return false if
-         there will be too many.  It should put the card on the top of the deck
-         .*/
+      too many
+      instances of the card in the deck if you add it.  Return false if
+      there will be too many.  It should put the card on the top of the deck
+      .*/
+   {
+      int count = 0;
+      boolean cardAdded = false;
+      while(cardAdded = false);
       {
-
+         for(int i = 0; i < cards.length; i++)
+         {
+            if(cards[i] == card)
+            {
+               count++;
+            }
+            
+            if(count > 3)
+            {
+               return cardAdded;
+            }
+            else
+            {
+               cardAdded = true;
+            }
+         }
+         
+         card = cards[cards.length + 1];
+         return cardAdded;
       }
+   }
 
-      boolean removeCard(Card card) /*- you are looking to remove a specific
-         card from the deck.  Put the current top card into its place.  Be sure
-         the card you need is actually still in the deck, if not return false.*/
+   boolean removeCard(Card card)
+   /*- you are looking to remove a specific
+      card from the deck.  Put the current top card into its place.  Be sure
+      the card you need is actually still in the deck, if not return false.
+   */
+   {
+      boolean cardRemoved = false;
+      for(int i = 0; i < cards.length; i++)
       {
-
+         if(cards[i] == card)
+         {
+            Card temp = cards[getTopCard()];
+            cards[getTopCard()] = card;
+            card = temp;
+            
+            dealCard();
+            cardRemoved = true;
+            return cardRemoved;          
+         }        
       }
+      return cardRemoved;
+   }
 
       public void sort() /* - put all of the cards in the deck back into the
          right order according to their values.  Is there another method
