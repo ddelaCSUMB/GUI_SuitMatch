@@ -1,6 +1,6 @@
+package images;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.Random;
 
@@ -13,18 +13,10 @@ public class phase2jav
    static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
    static JLabel[] playLabelText = new JLabel[NUM_PLAYERS];
 
-   static Card generateRandomCard()
-   {
-      Deck deck = new phase2jav().new Deck();
-      Random randomGen = new Random();
-      return deck.inspectCard(randomGen.nextInt(deck.getNumCards()));
-   }
-
-
    //BEGIN CardTable Class
-   static class CardTable extends JFrame
+   class CardTable extends JFrame
    {
-      static int MAX_CARDS_PER_HAND = 56;
+      static int MAX_CARDS_PER_HAND = 57;
       static int MAX_PLAYERS = 2;  // for now, we only allow 2 person games
 
       private int numCardsPerHand;
@@ -46,29 +38,17 @@ public class phase2jav
       client chose a joker for the two central cards, just so we
       would have something to see in the playing region.*/
       {
-         this.numCardsPerHand = numCardsPerHand;
-         setTitle(title); // look up jframe and how to instantiate it, and set layout,
-         //if statement later
-         //make sure greater than 0 and less than equal to 56
-         // make sure max players of 2 and only 2, set things for the frame
-         // add panels to frame from this constructor, set everything for the panel
-         //add panels to the frame
-         setLayout(new BorderLayout());
-         //Sets values
-         this.numCardsPerHand = numCardsPerHand;
-         this.numPlayers = numPlayers;
-
-         pnlComputerHand = new JPanel(new GridLayout(1, numCardsPerHand));
-         pnlHumanHand = new JPanel(new GridLayout(1, numCardsPerHand));
-         pnlPlayArea = new JPanel(new GridLayout(2, numPlayers));
-
+         setLayout(new GridLayout(3, 1));
          add(pnlComputerHand, BorderLayout.NORTH);
          add(pnlHumanHand, BorderLayout.SOUTH);
          add(pnlPlayArea, BorderLayout.CENTER);
-
-         pnlComputerHand.setBorder(new TitledBorder("Computer Hand"));
-         pnlHumanHand.setBorder(new TitledBorder("Playing Area"));
-         pnlPlayArea.setBorder(new TitledBorder("Your Hand"));
+         /*
+         pnlComputerHand.setLayout(new BorderLayout());
+         pnlComputerHand.add(BorderLayout.NORTH);
+         pnlHumanHand.setLayout(new BorderLayout());
+         pnlHumanHand.add(new Button(title), BorderLayout.SOUTH);
+         pnlPlayArea.setLayout(new BorderLayout());
+         pnlPlayArea.add(new Button(title), BorderLayout.CENTER);*/
 
 
 
@@ -90,101 +70,104 @@ public class phase2jav
    //START GUICard Class
    class GUICard
    {
+      // 14 = A thru K + joker
       private static Icon[][] iconCards = new ImageIcon[14][4];
       private static Icon iconBack;
-
       static boolean iconsLoaded = false;
+      static final int NUM_CARD_IMAGES = 57;
+      // 52 + 4 jokers + 1 back-of-card image
+      static Icon[] icon = new ImageIcon[NUM_CARD_IMAGES];
 
-      public static void loadCardIcons()
+      // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
+      static String turnIntIntoCardValue(int k)
       {
-         if (iconsLoaded)
-            return;
-         for (int cardValue = 0; cardValue < iconCards.length; cardValue++)
+         // an idea for a helper method (do it differently if you wish)
+         String cardRank = null;
+         String[] rankValues =
+            { "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K",
+               "X" };
+         if (k >= 0 && k < 14)
          {
-            for (int cardSuit = 0; cardSuit < iconCards[cardValue].length; cardSuit++)
+            cardRank = rankValues[k];
+         }
+         else
+         {
+            return rankValues[0];
+         }
+         return cardRank;
+      }
+
+      // turns 0 - 3 into "C", "D", "H", "S"
+      static String turnIntIntoCardSuit(int j)
+      {
+         // an idea for another helper method (do it differently if you wish)
+         String cardSuit = null;
+         String[] suitValues = { "C", "D", "H", "S" };
+         if (j >= 0 && j < 4)
+         {
+            cardSuit = suitValues[j];
+         }
+         else
+         {
+            return suitValues[0];
+         }
+         return cardSuit;
+      }
+
+      static void loadCardIcon() /*the code for this was fundamentally done in
+      Phase 1.  The difference here is that we are storing the Icons in a 2-D
+      array.  Don't require the client to call this method.  Think about where
+      you would need to call it and how can you avoid having the method reload
+      the icons after it has already loaded them once.  Hint:  Call this method
+      any time you might need an Icon, but make sure that it loads the entire
+      array the first time it is called, and does nothing any later time.*/
+
+      //From phase 1:
+      // build the file names ("AC.gif", "2C.gif", "3C.gif", "TC.gif", etc.)
+      // in a SHORT loop.  For each file name, read it in and use it to
+      // instantiate each of the 57 Icons in the icon[] array.
+      {
+         int index = 0;
+
+         for (int s = 0; s < 4; s++)
+         {
+            for (int r = 0; r < 14; r++)
             {
-               String filename = numCard(cardValue) + numSuit(cardSuit) + ".gif";
-               ImageIcon cardImage = new ImageIcon("images/" + filename);
-               iconCards[cardValue][cardSuit] = cardImage;
+               icon[index++] = new ImageIcon(
+                  "images/" + turnIntIntoCardValue(r) + turnIntIntoCardSuit(s) +
+                     ".gif");
             }
          }
-         //create final back card
-         iconBack = new ImageIcon("images/BK.gif");
-         iconsLoaded = true;
       }
 
-      //  Changes integer to the card value
-      static String numCard(int cardNum)
+      public static Icon getIcon(Card card) /*This method takes a Card object
+      from the client, and returns the Icon for that card.  It would be used
+      when the client needs to instantiate or change a JLabel. It can return
+      something like: return iconCards[valueAsInt(card)][suitAsInt(card)];*/
       {
-         String[] cardValues = {"A", "2", "3", "4", "5", "6",
-            "7", "8", "9", "T", "J", "Q", "K", "X"};
-         return cardValues[cardNum];
+
       }
 
-      //Checks
-      static String numSuit(int suitNum)
-      {
-         if (suitNum < 0 || suitNum > 3)
-            return "invalid";
-         return Card.Suit.values()[suitNum]
-            .toString().toUpperCase().substring(0, 1);
-      }
-
-      //Checks
-      private static int valueToInt(Card card)
-      {
-         return Card.valueOfCard(card);
-      }
-
-      //Converts suit to number
-      private static int suitToNum(Card card)
-      {
-         Card.Suit cardSuit = card.getSuit();
-
-         switch (cardSuit)
-         {
-         case SPADES:
-            return 0;
-         case HEARTS:
-            return 1;
-         case DIAMONDS:
-            return 2;
-         case CLUBS:
-            return 3;
-         default:
-            return -1;
-         }
-      }
-
-      public static Icon getIcon(Card card)
-      {
-         return iconCards[valueToInt(card)][suitToNum(card)];
-      }
-
-      public static Icon getBackcardIcon()
+      public static Icon getBackCardIcon()
       {
          return iconBack;
       }
    }
 
-   class Card
+   class Card /*Adjust for the joker. (Even though there are 4 card icons, think
+   of them as one type, X ) We need a way to know which card is Lower when we
+   compare them for the game later.*/
    {
-      //String str = "A","2","3","4","5","6","7","8","9","10",
       public enum Suit
       {
-         //clubs, diamonds, hearts, spades;
-         //private char value;
-         //private Suit suit;
          SPADES, HEARTS, DIAMONDS, CLUBS;
       }
 
-      public static char[] cardPosition =
-         { 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K',
-            'X' };
 
-      //private static final int MIN_RANK = 1;
-      //private static final int MAX_RANK = 13;
-
+      /*- put the order of the card values in here with the smallest first,
+      include 'X' for a joker*/
+      public static char[] valuRanks = new char[] { '2', '3', '4', '5', '6',
+         '7', '8', '9', 'T', 'J', 'Q', 'K', 'A', 'X' };
       private char value;
       private Suit suit;
       private boolean cardError;
@@ -212,6 +195,7 @@ public class phase2jav
          }
          else
             return value + " of " + suit;//
+
       }
 
       public boolean set(char value, Suit suit)//mutator
@@ -225,7 +209,6 @@ public class phase2jav
          }
          cardError = true;
          return false;
-
       }
 
       public char getValue()//accessors
@@ -243,6 +226,7 @@ public class phase2jav
          return cardError;
       }
 
+      //a method to check
       public boolean equals(Card otherCard)
       {
          if (suit == otherCard.getSuit() && value == otherCard.getValue() &&
@@ -265,53 +249,22 @@ public class phase2jav
          {
             return false;
          }
-
       }
 
-      public static void arraySort(Card[] cardArray, int arraySize)
+      static void arraySort(Card[] card, int arraySize) /*will sort the
+      incoming array of cards using a bubble sort routine. You can break this
+      up into smaller methods if it gets over 20 lines or so.*/
       {
 
-         Card temp;
-
-         // Bubble sort algorithm
-         for (int card = 0; card < arraySize; card++)
-         {
-            for (int nextCard = 1; nextCard < (arraySize - card); nextCard++)
-            {
-               int previousCard = valueOfCard(cardArray[nextCard - 1]);
-               int currentCard = valueOfCard(cardArray[nextCard]);
-
-               if (previousCard > currentCard)
-               {
-                  temp = cardArray[nextCard - 1];
-                  cardArray[nextCard - 1] = cardArray[nextCard];
-                  cardArray[nextCard] = temp;
-               }
-
-            }
-         }
-      }
-
-      static int valueOfCard(Card card)
-      {
-         for (int value = 0; value < cardPosition.length; value++)
-         {
-            if (card.getValue() == cardPosition[value])
-            {
-               return value;
-            }
-         }
-         return -1;
       }
    }
+
    //END of Card Class
 
    //Start of Hand class
-   class Hand extends Card
-   {
+   class Hand extends Card/*
 
-      /*Adjust for the joker by adding 4 empty spots to the Card[] array per
-      pack.
+   Adjust for the joker by adding 4 empty spots to the Card[] array per pack.
 
    Adjust the playCard() method to account for possible empty spaces in the
    array.
@@ -319,6 +272,7 @@ public class phase2jav
    Do NOT add jokers to the masterPack[] because they will be added by the
    CardGameOutline class later on.*/
 
+   {
       //series of variables used
       public final int MAX_CARDS = 75;  //range is from 50 - 100
       private Card[] myCards;
@@ -367,8 +321,8 @@ public class phase2jav
          {
             return emptyCard;
          }
-
-         if (myCards[index] == null)
+         
+         if(myCards[index] == null)
          {
             playCard(index);
          }
@@ -427,7 +381,7 @@ public class phase2jav
          if (numCards == 0) //error
          {
             //Creates a card that does not work
-            return new Card('M', Suit.SPADES);
+            return new Card('M', Card.Suit.spades);
          }
          //Decreases numCards.
          Card card = myCards[cardIndex];
@@ -452,21 +406,20 @@ public class phase2jav
    //END of Hand Class
 
    //START of Deck Class
-   public class Deck /*Adjust for the joker by adding 4 spots in the Card[]
-     array.
+   class Deck /*Adjust for the joker by adding 4 spots in the Card[] array.
    Add methods for adding and removing cards from the deck as well as a sort
    method. (these will be using in the CardGameOutline given in Phase 3)*/
 
    {
       public static final int MAX_CARDS = 312;
-      private static Card[] masterPack = new Card[56];
+      private static Card[] masterPack = new Card[52];
 
       private Card[] cards;
       private int topCard;
 
       public Deck(int numPacks)
       {
-         cards = new Card[numPacks * 56];
+         cards = new Card[numPacks * 52];
          allocateMasterPack();
          init(numPacks);
       }
@@ -474,16 +427,16 @@ public class phase2jav
       public Deck()
       {
          int numPacks = 1;
-         cards = new Card[numPacks * 56];
+         cards = new Card[numPacks * 52];
          init(numPacks);
       }
 
       public void init(int numPacks)
       {
-         topCard = (numPacks * 56) - 1;
+         topCard = (numPacks * 52) - 1;
          for (int i = 0; i <= topCard; i++)
          {
-            cards[i] = masterPack[i % 56];
+            cards[i] = masterPack[i % 52];
             System.out.println(cards[i]);
          }
       }
@@ -555,7 +508,7 @@ public class phase2jav
          }
          // if masterPack is empty build it
 
-         masterPack = new Card[56];
+         masterPack = new Card[52];
          // not empty do nothing
          // 2 nested loops to build the deck
          //s is for suit
@@ -568,114 +521,85 @@ public class phase2jav
 
             for (int i = 0; i < 8; i++)
             {
-               masterPack[i + 14 * s] = new Card((char) (r + 48), suit);
+               masterPack[i + 13 * s] = new Card((char) (r + 48), suit);
                r++;
                //System.out.println(masterPack[i]);
             }
-            masterPack[8 + 14 * s] = new Card('T', suit);
-            masterPack[9 + 14 * s] = new Card('J', suit);
-            masterPack[10 + 14 * s] = new Card('Q', suit);
-            masterPack[11 + 14 * s] = new Card('K', suit);
-            masterPack[12 + 14 * s] = new Card('A', suit);
-            masterPack[13 + 14 * s] = new Card('X', suit);
+            masterPack[8 + 13 * s] = new Card('T', suit);
+            masterPack[9 + 13 * s] = new Card('J', suit);
+            masterPack[10 + 13 * s] = new Card('Q', suit);
+            masterPack[11 + 13 * s] = new Card('K', suit);
+            masterPack[12 + 13 * s] = new Card('A', suit);
          }
          //loop for char value & loop for Suit suit
       }
 
       boolean addCard(Card card) /*- make sure that there are not
-         too many
-         instances of the card in the deck if you add it.  Return false if
-         there will be too many.  It should put the card on the top of the deck
-         .*/
+      too many
+      instances of the card in the deck if you add it.  Return false if
+      there will be too many.  It should put the card on the top of the deck
+      .*/
+   {
+      int count = 0;
+      boolean cardAdded = false;
+      while(cardAdded = false);
       {
-         int DECK_SIZE = 56;
-         int deckNum = topCard / DECK_SIZE;
-
-         int cardInstances = 0;
-
-         for (int cardPosition = 0; cardPosition < topCard; cardPosition++)
+         for(int i = 0; i < cards.length; i++)
          {
-            if (card.equals(cards[cardPosition]))
+            if(cards[i] == card)
             {
-               cardInstances++;
+               count++;
+            }
+            
+            if(count > 3)
+            {
+               return cardAdded;
+            }
+            else
+            {
+               cardAdded = true;
             }
          }
-
-         System.out.println("Card instances is: " + cardInstances);
-
-         if (cardInstances >= deckNum)
-         {
-            System.out.println("Did not add card");
-            return false;
-         }
-         System.out.println("Added the card to the deck");
-
-         cards[topCard] = card;
-
-         topCard++;
-         System.out.println("The topCard Value is: " + topCard);
-         return true;
-
-
+         
+         card = cards[cards.length + 1];
+         return cardAdded;
       }
+   }
 
-      boolean removeCard(Card card) /*- you are looking to remove a specific
-         card from the deck.  Put the current top card into its place.  Be sure
-         the card you need is actually still in the deck, if not return false.*/
+   boolean removeCard(Card card)
+   /*- you are looking to remove a specific
+      card from the deck.  Put the current top card into its place.  Be sure
+      the card you need is actually still in the deck, if not return false.
+   */
+   {
+      boolean cardRemoved = false;
+      for(int i = 0; i < cards.length; i++)
       {
-         for (int cardsIndex = 0; cardsIndex < topCard; cardsIndex++)
+         if(cards[i] == card)
          {
-            if (cards[cardsIndex].equals(card))
-            {
-               System.out.println("Removed Card Successfully");
-
-
-               cards[cardsIndex] = cards[topCard - 1];
-
-
-               topCard--;
-               return true;
-            }
-         }
-
-         System.out.println("Did not remove card, none left");
-         System.out.println(topCard);
-         return false;
-
-
+            Card temp = cards[getTopCard()];
+            cards[getTopCard()] = card;
+            card = temp;
+            
+            dealCard();
+            cardRemoved = true;
+            return cardRemoved;          
+         }        
       }
+      return cardRemoved;
+   }
 
-      public void sort(Card[] cardArray, int arraySize) /* - put all of the cards in the deck back into the
+      public void sort() /* - put all of the cards in the deck back into the
          right order according to their values.  Is there another method
          somewhere that already does this that you could refer to?*/
       {
-         Card temp;
-
-         // Bubble sort algorithm
-         for (int card = 0; card < arraySize; card++)
-         {
-            for (int nextCard = 1; nextCard < (arraySize - card); nextCard++)
-            {
-               int previousCard = Card.valueOfCard(cardArray[nextCard - 1]);
-               int currentCard = Card.valueOfCard(cardArray[nextCard]);
-
-               if (previousCard > currentCard)
-               {
-                  temp = cardArray[nextCard - 1];
-                  cardArray[nextCard - 1] = cardArray[nextCard];
-                  cardArray[nextCard] = temp;
-               }
-
-            }
-         }
-
 
       }
 
       public int getNumCards() //return the number of cards remaining in the
       // deck
       {
-         return cards.length;
+
       }
 
    }
@@ -688,9 +612,9 @@ public class phase2jav
       int k;
       Icon tempIcon;
 
-      GUICard.loadCardIcons();
       // establish main frame in which program will run
-      CardTable myCardTable = new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
+      CardTable myCardTable =
+         new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
       myCardTable.setSize(800, 600);
       myCardTable.setLocationRelativeTo(null);
       myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -699,33 +623,16 @@ public class phase2jav
       myCardTable.setVisible(true);
 
       // CREATE LABELS ----------------------------------------------------
-      //code goes here ...
-      for (int card = 0; card < NUM_CARDS_PER_HAND; card++)
-      {
-         //give the Computer a back card Label
-         computerLabels[card] = new JLabel(GUICard.getBackcardIcon());
-
-         //give Human a random Card Label
-         tempIcon = GUICard.getIcon(generateRandomCard());
-         humanLabels[card] = new JLabel(tempIcon);
-      }
+      code goes here ...
 
       // ADD LABELS TO PANELS -----------------------------------------
-      //code goes here ...
-      for (int card = 0; card < NUM_CARDS_PER_HAND; card++)
-      {
-         //add indexed label to Computer panel
-         myCardTable.pnlComputerHand.add(computerLabels[card]);
+      code goes here ...
 
-         //add indexed label to Human panel
-         myCardTable.pnlHumanHand.add(humanLabels[card]);
-      }
       // and two random cards in the play region (simulating a computer/hum ply)
-      //code goes here ...
+      code goes here ...
 
       // show everything to the user
       myCardTable.setVisible(true);
-
    }
 
 }
